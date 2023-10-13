@@ -1,0 +1,61 @@
+version: '3.8'
+
+networks:
+  wp-docker-quick-start: # Change this name to avoid network naming conflict
+    external: false
+
+volumes:
+  wp-core:
+  plugins:
+  themes:
+  database-volume:
+
+services:
+
+  database:
+    image: mariadb
+    ports:
+      - "${DB_EXPOSE_PORT}:3306"
+    environment:
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASS}
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASS}
+    volumes:
+      - ./database-volume:/var/lib/mysql
+    networks:
+      wp-docker-quick-start:
+        aliases:
+          - ${DB_NETWORK_ALIAS}
+
+  adminer:
+    image: adminer
+    ports:
+      - "${ADMINER_EXPOSE_PORT}:8080"
+    networks:
+      wp-docker-quick-start:
+        aliases:
+          - ${ADMINER_NETWORK_ALIAS}
+    depends_on:
+      - ${DB_NETWORK_ALIAS}
+
+  wp-server:
+    image: wordpress
+    ports:
+      - "${WP_EXPOSE_PORT}:80"
+    environment:
+      WORDPRESS_DB_HOST: ${DB_NETWORK_ALIAS}
+      WORDPRESS_DB_USER: ${DB_USER}
+      WORDPRESS_DB_PASSWORD: ${DB_PASS}
+      WORDPRESS_DB_NAME: ${DB_NAME}
+      WORDPRESS_DEBUG: ${WP_DEBUG}
+    volumes:
+      - ./${WP_CORE}:/var/www/html
+      - ./${WP_PLUGINS}:/var/www/html/wp-content/plugins/
+      - ./${WP_THEMES}:/var/www/html/wp-content/themes/
+    networks:
+      wp-docker-quick-start:
+        aliases:
+          - ${WP_NETWORK_ALIAS}
+    depends_on:
+      - ${DB_NETWORK_ALIAS}

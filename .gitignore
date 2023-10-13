@@ -1,0 +1,9 @@
+# Project File/Folders
+database-volume
+wordpress
+plugins
+themes
+.env
+
+# IDE File/Folders
+.idea
