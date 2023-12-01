@@ -40,7 +40,10 @@ services:
       - ${DB_NETWORK_ALIAS}
 
   wp-server:
-    image: wordpress
+    container_name: wp-server
+    build:
+      dockerfile: Dockerfile
+      context: ./xdebug
     ports:
       - "${WP_EXPOSE_PORT}:80"
     environment:
