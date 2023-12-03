@@ -47,4 +47,5 @@ All the themes will go in this folder
 WordPress core files will be here
 
 `xdebug`
+
 xDebug configuration files.
