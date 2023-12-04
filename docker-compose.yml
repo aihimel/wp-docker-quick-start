@@ -40,7 +40,6 @@ services:
       - ${DB_NETWORK_ALIAS}
 
   wp-server:
-    container_name: wp-server
     build:
       dockerfile: Dockerfile
       context: ./xdebug
